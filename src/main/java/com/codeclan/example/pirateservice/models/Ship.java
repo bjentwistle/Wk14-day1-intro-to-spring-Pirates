@@ -1,7 +1,10 @@
 package com.codeclan.example.pirateservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Ships")
@@ -14,14 +17,16 @@ public class Ship {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "pirates")
-    private ArrayList<Pirate> pirates;
+    @Column(name = "pirates") //adds a column of Pirates in ship table which holds an arrayList of pirates.
+    @JsonIgnoreProperties({"ship"})
+    @OneToMany(mappedBy = "ship") //one ship has many pirates in
+    private List<Pirate> pirates; //List of pirates for this ship
 
-    public Ship(){}; //empty constructor
+    public Ship(){}; //empty constructor for POJO
 
-    public Ship(String name, ArrayList<Pirate> pirates) {
+    public Ship(String name) {
         this.name = name;
-        this.pirates = pirates;
+        this.pirates = new ArrayList<Pirate>();
     }
 
     public Long getId() {
@@ -40,11 +45,11 @@ public class Ship {
         this.name = name;
     }
 
-    public ArrayList<Pirate> getPirates() {
+    public List<Pirate> getPirates() {
         return pirates;
     }
 
-    public void setPirates(ArrayList<Pirate> pirates) {
+    public void setPirates(List<Pirate> pirates) {
         this.pirates = pirates;
     }
 }
